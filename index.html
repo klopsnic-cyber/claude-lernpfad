@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude-Lernpfad</title>
+<script>try { var th = localStorage.getItem('claude-lernpfad-v1-thema'); if (th) document.documentElement.dataset.theme = th; } catch (e) {}</script>
+<style>
+/* ---------- Tokens ---------- */
+:root {
+  color-scheme: light dark;
+  --header-h: 60px;
+  --bg: #f7f5f0; --flaeche: #ffffff; --flaeche2: #f0ede5; --text: #1f1d1a; --leise: #6b665d;
+  --rand: #e2ddd2; --feld-rand: #767066; --akzent: #a84a2a; --akzent-text: #ffffff; --akzent-bg: #faf0ea;
+  --ok: #2f7d4f; --ok-text: #1f6a3e; --ok-bg: #e6f3eb; --ok-on: #ffffff;
+  --falsch: #b3402a; --falsch-bg: #fbe9e4;
+  --warn: #9a5b00; --warn-text: #7a4600; --warn-bg: #fdf0d8; --warn-rand: #b7791f; --warn-on: #ffffff;
+  --cowork: #3b6ea5; --code: #6b4fa0; --pfad-on: #ffffff;
+  --header-bg: rgba(255,255,255,.84);
+  --code-bg: #1e1d1b; --code-text: #e9e6df; --term-rand: #0d0c0b; --term-leiste: #2a2927; --term-ein: #f0b48f; --term-aus: #b9b4aa; --term-fehler: #f08a70; --term-prompt: #8fd0a8; --term-hint: #9a958b;
+  --schatten: 0 1px 2px rgba(31,29,26,.06), 0 1px 1px rgba(31,29,26,.03);
+  --schatten-hover: 0 12px 28px -10px rgba(31,29,26,.22), 0 2px 6px rgba(31,29,26,.06);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --m-ok: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  --m-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+  --m-excl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M12 5.5v8M12 18.5h.01'/%3E%3C/svg%3E");
+  --m-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z'/%3E%3C/svg%3E");
+  --m-bulb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z'/%3E%3C/svg%3E");
+  --m-lock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 11V8a5 5 0 0 1 10 0v3M5.5 11h13v9.5h-13z'/%3E%3C/svg%3E");
+  --m-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4L2.8 19.5h18.4zM12 10v4.5M12 17.2h.01'/%3E%3C/svg%3E");
+}
+:root[data-theme="light"] { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1917; --flaeche: #23221f; --flaeche2: #2c2a26; --text: #ece9e2; --leise: #a39e94;
+    --rand: #3d3a34; --feld-rand: #8a857b; --akzent: #e07a52; --akzent-text: #1a1917; --akzent-bg: #3a2a22;
+    --ok: #6cc28f; --ok-text: #6cc28f; --ok-bg: #1f3328; --ok-on: #10231a;
+    --falsch: #f08a70; --falsch-bg: #3a2420;
+    --warn: #e8a93f; --warn-text: #f0bb62; --warn-bg: #3a2d17; --warn-rand: #e8a93f; --warn-on: #1a1917;
+    --cowork: #7aa7d8; --code: #b49cef; --pfad-on: #1a1917;
+    --header-bg: rgba(35,34,31,.84);
+    --code-bg: #121110; --term-rand: #4a463f; --term-leiste: #1f1e1c;
+    --schatten: inset 0 1px 0 rgba(255,255,255,.04);
+    --schatten-hover: 0 14px 30px -10px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1a1917; --flaeche: #23221f; --flaeche2: #2c2a26; --text: #ece9e2; --leise: #a39e94;
+  --rand: #3d3a34; --feld-rand: #8a857b; --akzent: #e07a52; --akzent-text: #1a1917; --akzent-bg: #3a2a22;
+  --ok: #6cc28f; --ok-text: #6cc28f; --ok-bg: #1f3328; --ok-on: #10231a;
+  --falsch: #f08a70; --falsch-bg: #3a2420;
+  --warn: #e8a93f; --warn-text: #f0bb62; --warn-bg: #3a2d17; --warn-rand: #e8a93f; --warn-on: #1a1917;
+  --cowork: #7aa7d8; --code: #b49cef; --pfad-on: #1a1917;
+  --header-bg: rgba(35,34,31,.84);
+  --code-bg: #121110; --term-rand: #4a463f; --term-leiste: #1f1e1c;
+  --schatten: inset 0 1px 0 rgba(255,255,255,.04);
+  --schatten-hover: 0 14px 30px -10px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* Pfadfarbe: je Lernpfad ein --pfad (data-pfad="chat|cowork|code") */
+[data-pfad] { --pfad: var(--akzent); }
+[data-pfad="cowork"] { --pfad: var(--cowork); }
+[data-pfad="code"] { --pfad: var(--code); }
+
+/* ---------- Grundlagen ---------- */
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--header-h) + 16px); accent-color: var(--akzent); }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+h1, h2 { font-family: var(--serif); font-weight: 700; }
+a { color: var(--akzent); }
+code, kbd, pre, .terminal { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .92em; }
+code { background: var(--flaeche2); padding: .1em .35em; border-radius: 4px; }
+kbd { border: 1px solid var(--rand); border-bottom-width: 2px; padding: 0 .35em; border-radius: 4px; background: var(--flaeche); }
+pre { background: var(--code-bg); color: var(--code-text); padding: 14px 16px; border-radius: 10px; border: 1px solid var(--term-rand); overflow-x: auto; white-space: pre-wrap; }
+pre code { background: none; padding: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+main:focus, h1:focus, .zaehler:focus { outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 8px; top: -60px; z-index: 20; background: var(--akzent); color: var(--akzent-text); padding: 10px 16px; border-radius: 10px; font-weight: 600; }
+.skip:focus { top: 8px; }
+.ico { width: 1.2em; height: 1.2em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.22em; }
+
+/* Maskierte Symbole (Haken, Kreuz, …) – eine Regel für alle Pseudo-Elemente */
+.icon.ok::after, .icon.gesperrt::after, .abschluss::after, .feedback.ok::after, .feedback.falsch::after, .option.falsch::after, .reihe li.richtig::after,
+.paar.richtig .chip:has(input:checked)::after, .paar.falsch .chip:has(input:checked)::after, .beispiel .schlecht b::before, .beispiel .gut b::before, .hinweisbox::after, .pfadfertig h3::after {
+  content: ""; display: block; background: currentColor;
+  -webkit-mask: var(--mk) center / contain no-repeat; mask: var(--mk) center / contain no-repeat;
+}
+
+/* ---------- Kopfzeile ---------- */
+header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; height: var(--header-h); padding: 0 16px;
+  background: var(--flaeche); background: var(--header-bg); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rand); }
+header .logo { font-weight: 700; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 10px; letter-spacing: -.01em; }
+header .logo span.kachel { width: 28px; height: 28px; border-radius: 8px; background: var(--akzent); color: var(--akzent-text); display: grid; place-items: center; font-size: 15px; line-height: 1; }
+header .platz { flex: 1; }
+.banner { background: var(--warn-bg); color: var(--text); border-bottom: 2px solid var(--warn-rand); padding: 12px 16px; }
+.statusmeldung { position: sticky; top: var(--header-h); z-index: 6; padding: 12px 16px; border-bottom: 1px solid var(--rand); border-left: 4px solid var(--feld-rand); background: var(--flaeche2); font-weight: 500; }
+.statusmeldung:empty { display: none; }
+.statusmeldung.ok { background: var(--ok-bg); border-bottom-color: var(--ok); border-left-color: var(--ok); }
+.statusmeldung.falsch { background: var(--warn-bg); border-bottom-color: var(--warn-rand); border-left-color: var(--warn-rand); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; text-decoration: none; background: var(--akzent); color: var(--akzent-text); border: 1px solid transparent; border-radius: 10px; padding: 8px 18px; font-weight: 600; line-height: 1.3; cursor: pointer; transition: filter .15s, transform .15s, background-color .15s; }
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
+.btn.zweit { background: var(--flaeche2); color: var(--text); border-color: var(--rand); font-weight: 500; }
+.btn.zweit:hover { filter: none; border-color: var(--feld-rand); }
+.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; transform: none; }
+.btn.klein { padding: 6px 12px; font-size: .92em; }
+.btn.gross { min-height: 52px; padding: 12px 26px; font-size: 1.08em; border-radius: 12px; }
+.linkknopf { background: none; border: 0; padding: 4px 0; color: var(--akzent); text-decoration: underline; cursor: pointer; }
+.mini { display: inline-grid; place-items: center; background: var(--flaeche2); border: 1px solid var(--rand); border-radius: 8px; width: 40px; height: 40px; cursor: pointer; font-weight: 600; }
+.mini:hover:not(:disabled) { border-color: var(--feld-rand); }
+.mini:disabled { opacity: .35; cursor: default; }
+#menueKnopf { display: none; }
+.fmenue summary { list-style: none; cursor: pointer; }
+.fmenue summary::-webkit-details-marker { display: none; }
+.fpanel { position: absolute; right: 16px; top: calc(100% + 6px); width: 340px; max-width: calc(100vw - 24px); display: grid; gap: 10px; padding: 16px; background: var(--flaeche); border: 1px solid var(--rand); border-radius: 12px; box-shadow: var(--schatten-hover); }
+.fpanel p { margin: 0; font-size: .92em; }
+.fpanel .btn { justify-content: flex-start; }
+.fpanel .gefahr { justify-self: start; color: var(--falsch); }
+#themaKnopf .sonne { display: none; }
+#themaKnopf[aria-pressed="true"] .sonne { display: inline-block; }
+#themaKnopf[aria-pressed="true"] .mond { display: none; }
+
+/* ---------- Layout + Navigation ---------- */
+.layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
+nav { --np: 7px; border-right: 1px solid var(--rand); padding: 16px 12px 32px; background: var(--flaeche); overflow-y: auto; position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); }
+.suchfeld { position: relative; margin-bottom: 6px; }
+.suchfeld .ico { position: absolute; left: 12px; top: 50%; margin-top: -.6em; color: var(--leise); pointer-events: none; }
+nav .suche { width: 100%; min-height: 40px; padding: 8px 12px 8px 36px; border: 1px solid var(--feld-rand); border-radius: 10px; background: var(--bg); }
+nav .suche::placeholder { color: var(--leise); opacity: 1; }
+nav .gruppe { margin-top: 22px; }
+nav .gruppe:first-child { margin-top: 12px; }
+nav h2 { font: 700 .76em/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--pfad, var(--leise)); margin: 0 8px 8px; font-variant-numeric: tabular-nums; }
+nav ul { list-style: none; margin: 0; padding: 0; }
+nav li { position: relative; }
+/* dünne Verbindungslinie zwischen den Markern */
+nav li::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--rand); }
+nav li:first-child::before { top: calc(var(--np) + 10px); }
+nav li:last-child::before { bottom: auto; height: calc(var(--np) + 10px); }
+nav li:only-child::before { display: none; }
+nav a { position: relative; display: flex; gap: 10px; align-items: flex-start; padding: var(--np) 8px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: .92em; line-height: 1.35; }
+nav a:hover { background: var(--flaeche2); }
+nav a.aktiv { background: var(--akzent-bg); box-shadow: inset 3px 0 0 var(--pfad, var(--akzent)); font-weight: 600; }
+/* Marker: offen = Rand, begonnen = halb, erledigt = gefüllt mit Haken (Textglyph bleibt für Tests/Technik, wird nur ausgeblendet) */
+nav .icon { width: 18px; height: 18px; margin-top: 1px; flex: none; border-radius: 50%; border: 2px solid var(--feld-rand); background: var(--flaeche); font-size: 0; line-height: 0; color: transparent; position: relative; z-index: 1; }
+nav .icon.begonnen { border-color: var(--pfad, var(--akzent)); background: linear-gradient(90deg, var(--pfad, var(--akzent)) 50%, var(--flaeche) 50%); }
+nav .icon.ok { background: var(--ok); border-color: var(--ok); color: var(--ok-on); --mk: var(--m-ok); }
+nav .icon.ok::after { position: absolute; inset: 2px; }
+nav .icon.gesperrt { color: var(--leise); --mk: var(--m-lock); }
+nav .icon.gesperrt::after { position: absolute; inset: 1px; }
+.balken { height: 8px; background: var(--rand); border-radius: 99px; margin: 0 8px 8px; overflow: hidden; }
+.balken > div { height: 100%; border-radius: 99px; background: var(--pfad, var(--akzent)); transition: width .4s ease; }
+
+/* ---------- Inhalt ---------- */
+main { padding: 36px clamp(16px, 4vw, 48px) 72px; width: 100%; }
+.lektion { max-width: 820px; }
+main h1 { font-size: 2em; line-height: 1.2; letter-spacing: -.02em; margin: 0 0 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: .82em; font-weight: 500; line-height: 1.4; padding: 3px 11px; border-radius: 99px; background: var(--flaeche2); color: var(--leise); border: 1px solid var(--rand); font-variant-numeric: tabular-nums; }
+.chip.pfad { font-weight: 700; color: var(--pfad); background: var(--flaeche); border-color: var(--pfad); }
+.zaehler { margin: 0 0 28px; font-size: .88em; font-weight: 600; color: var(--leise); font-variant-numeric: tabular-nums; max-width: 260px; }
+.zaehler::after { content: ""; display: block; height: 6px; margin-top: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--ok) var(--p, 0%), var(--rand) var(--p, 0%)); }
+.text { max-width: 68ch; }
+.text p, .text li { line-height: 1.7; }
+.text ul, .text ol { padding-left: 1.4em; }
+.text h2 { font-size: 1.3em; line-height: 1.3; letter-spacing: -.01em; margin: 2em 0 .5em; }
+.hinweisbox { position: relative; background: var(--akzent-bg); border: 1px solid var(--rand); border-left: 4px solid var(--akzent); padding: 12px 16px 14px 44px; border-radius: 0 12px 12px 0; margin: 20px 0; --mk: var(--m-bulb); }
+.hinweisbox::before { content: "Hinweis"; display: block; font-size: .74em; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text); margin-bottom: 2px; }
+.hinweisbox::after { position: absolute; left: 14px; top: 12px; width: 18px; height: 18px; color: var(--akzent); }
+.hinweisbox.info::before { content: "Gut zu wissen"; }
+.hinweisbox.wichtig { background: var(--warn-bg); border-color: var(--warn-rand); border-left-width: 6px; --mk: var(--m-alert); }
+.hinweisbox.wichtig::before { content: "Wichtig"; color: var(--warn-text); }
+.hinweisbox.wichtig::after { color: var(--warn-text); }
+
+/* Vorher/Nachher */
+.beispiel { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; align-items: start; }
+.beispiel > div { border-radius: 12px; padding: 14px 16px; border: 1px solid var(--rand); background: var(--flaeche); }
+.beispiel .schlecht { background: var(--falsch-bg); border-color: var(--falsch); }
+.beispiel .gut { background: var(--ok-bg); border-color: var(--ok); }
+.beispiel b { display: flex; align-items: center; gap: 8px; font-size: .88em; letter-spacing: .01em; margin-bottom: 6px; }
+.beispiel b::before { width: 16px; height: 16px; flex: none; }
+.beispiel .schlecht b { color: var(--falsch); } .beispiel .schlecht b::before { --mk: var(--m-x); }
+.beispiel .gut b { color: var(--ok-text); } .beispiel .gut b::before { --mk: var(--m-ok); }
+.beispiel .warum { grid-column: 1 / -1; background: none; border: 0; padding: 0 2px; color: var(--leise); }
+
+/* ---------- Aufgabenkarten ---------- */
+.aufgabe { background: var(--flaeche); border: 1px solid var(--rand); border-left: 4px solid var(--akzent); border-radius: 16px; padding: 20px 24px; margin: 28px 0; box-shadow: var(--schatten); }
+.aufgabe.fertig { border-color: var(--ok); background: var(--ok-bg); }
+.aufgabe h3 { margin: 0 0 6px; font-size: 1em; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.aufgabe h3 .nr { width: 28px; height: 28px; border-radius: 50%; background: var(--akzent); color: var(--akzent-text); display: grid; place-items: center; flex: none; font-size: .88em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.aufgabe h3 .typ { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: .8em; color: var(--leise); background: var(--flaeche2); border: 1px solid var(--rand); padding: 3px 11px 3px 9px; border-radius: 99px; }
+.aufgabe.fertig h3::after { content: "✓ erledigt"; margin-left: auto; background: var(--ok); color: var(--ok-on); font-size: .8em; font-weight: 600; padding: 3px 12px; border-radius: 99px; }
+.typinfo { margin: 0 0 16px; color: var(--leise); font-size: .86em; }
+.frage { margin: 0 0 12px; font-weight: 600; }
+legend.frage { display: block; float: left; width: 100%; } legend.frage + * { clear: both; }
+.hinweis { color: var(--leise); font-size: .9em; margin: -6px 0 10px; }
+.optionen { display: grid; gap: 8px; margin-bottom: 16px; }
+.option { display: flex; gap: 12px; align-items: flex-start; padding: 11px 14px; border: 1px solid var(--rand); border-radius: 10px; background: var(--flaeche); cursor: pointer; transition: border-color .15s, background-color .15s; }
+.option:hover { background: var(--flaeche2); }
+.option:has(input:checked) { border-color: var(--akzent); background: var(--akzent-bg); box-shadow: inset 0 0 0 1px var(--akzent); }
+.option.falsch { border-color: var(--falsch); background: var(--falsch-bg); box-shadow: inset 0 0 0 1px var(--falsch); --mk: var(--m-x); }
+.option.falsch::after { width: 16px; height: 16px; margin: .25em 0 0 auto; flex: none; color: var(--falsch); }
+.option input, .checkliste input { width: 18px; height: 18px; flex: none; margin: .2em 0 0; accent-color: var(--akzent); }
+.reihe { padding: 0; margin: 0 0 16px; list-style: none; counter-reset: r; display: grid; gap: 8px; }
+.reihe li { display: flex; gap: 12px; align-items: center; padding: 8px 10px 8px 14px; border: 1px solid var(--rand); border-radius: 10px; background: var(--flaeche); counter-increment: r; }
+.reihe li.richtig { border-color: var(--ok); background: var(--ok-bg); box-shadow: inset 0 0 0 1px var(--ok); --mk: var(--m-ok); }
+.reihe li.richtig::after { order: 2; width: 18px; height: 18px; color: var(--ok-text); }
+.reihe li::before { content: counter(r); font-weight: 700; color: var(--akzent); width: 1.2em; font-variant-numeric: tabular-nums; }
+.reihe li > span:first-of-type { flex: 1; }
+.pfeile { display: flex; gap: 6px; order: 3; }
+.paare { display: grid; gap: 12px; margin-bottom: 16px; }
+.paar { margin: 0; padding: 12px 14px 14px; border: 1px solid var(--rand); border-radius: 12px; background: var(--flaeche); transition: border-color .15s, background-color .15s; }
+.paar legend { float: left; width: 100%; padding: 0; margin: 0 0 10px; font-weight: 600; }
+.paar legend + * { clear: both; }
+.paar.richtig { border-color: var(--ok); background: var(--ok-bg); }
+.paar.falsch { border-color: var(--falsch); background: var(--falsch-bg); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 7px 14px 7px 11px; border: 1px solid var(--feld-rand); border-radius: 99px; background: var(--bg); cursor: pointer; font-size: .94em; line-height: 1.3; transition: border-color .15s, background-color .15s; }
+.chip:hover { background: var(--flaeche2); }
+.chip input { width: 16px; height: 16px; margin: 0; flex: none; accent-color: var(--akzent); }
+.chip:has(input:checked) { border-color: var(--akzent); background: var(--akzent-bg); box-shadow: inset 0 0 0 1px var(--akzent); font-weight: 600; }
+.paar.richtig .chip:has(input:checked) { border-color: var(--ok); background: var(--ok-bg); box-shadow: inset 0 0 0 1px var(--ok); --mk: var(--m-ok); }
+.paar.falsch .chip:has(input:checked) { border-color: var(--falsch); background: var(--falsch-bg); box-shadow: inset 0 0 0 1px var(--falsch); --mk: var(--m-x); }
+.paar.richtig .chip:has(input:checked)::after, .paar.falsch .chip:has(input:checked)::after { width: 14px; height: 14px; flex: none; }
+.paar.richtig .chip:has(input:checked)::after { color: var(--ok-text); }
+.paar.falsch .chip:has(input:checked)::after { color: var(--falsch); }
+.eingabe, textarea { width: 100%; min-height: 40px; padding: 8px 12px; border: 1px solid var(--feld-rand); border-radius: 10px; background: var(--bg); }
+textarea { min-height: 130px; resize: vertical; }
+.zeile { display: flex; gap: 8px; margin-bottom: 4px; }
+
+/* Rückmeldung: freundlich, nicht Alarm */
+@keyframes pop { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes puls { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); } }
+.feedback { margin: 16px 0 0; padding: 0; min-height: 0; }
+.feedback.ok, .feedback.falsch { position: relative; padding: 14px 16px 14px 62px; border-radius: 12px; color: var(--text); animation: pop .2s ease-out; }
+.feedback.ok::before, .feedback.falsch::before { content: ""; position: absolute; left: 16px; top: 13px; width: 32px; height: 32px; border-radius: 50%; }
+.feedback.ok::after, .feedback.falsch::after { position: absolute; left: 24px; top: 21px; width: 16px; height: 16px; }
+.feedback.ok { background: var(--ok-bg); border: 1px solid var(--ok); --mk: var(--m-ok); }
+.feedback.ok::before { background: var(--ok); } .feedback.ok::after { color: var(--ok-on); }
+.feedback.falsch { background: var(--warn-bg); border: 1px solid var(--warn-rand); --mk: var(--m-excl); }
+.feedback.falsch::before { background: var(--warn); } .feedback.falsch::after { color: var(--warn-on); }
+.feedback > b:first-child { display: block; font-size: 1.05em; color: var(--ok-text); margin-bottom: 2px; }
+.feedback pre { margin: 8px 0; }
+.feedback p { margin: 8px 0 0; }
+.extras { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.extras .aufklapp { flex-basis: 100%; color: var(--leise); font-size: .95em; }
+.extras .aufklapp:not(:empty) { background: var(--flaeche2); border-radius: 10px; padding: 10px 14px; color: var(--text); }
+
+/* Terminal-Fenster */
+.terminal { background: var(--code-bg); color: var(--code-text); border: 1px solid var(--term-rand); border-radius: 12px; padding: 0 16px 0; margin-bottom: 10px; overflow: hidden; box-shadow: 0 8px 20px -10px rgba(0,0,0,.45); }
+.terminal::before { content: "Terminal"; display: block; margin: 0 -16px 12px; padding: 0 16px 0 74px; height: 28px; line-height: 28px; font: 600 .78em/28px system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .04em; color: var(--term-aus); background:
+  radial-gradient(circle at 20px 50%, #ff5f57 5px, transparent 5.5px), radial-gradient(circle at 38px 50%, #febc2e 5px, transparent 5.5px), radial-gradient(circle at 56px 50%, #28c840 5px, transparent 5.5px), var(--term-leiste); }
+.terminal:focus-within { outline: 3px solid var(--akzent); outline-offset: 2px; }
+.terminal .verlauf { white-space: pre-wrap; max-height: 320px; overflow-y: auto; padding-bottom: 8px; }
+.terminal .ein { color: var(--term-ein); }
+.terminal .aus { color: var(--term-aus); }
+.terminal .fehler { color: var(--term-fehler); }
+.terminal .zeile { align-items: center; margin: 4px -16px 0; padding: 8px 16px; background: rgba(255,255,255,.05); border-top: 1px solid rgba(255,255,255,.08); }
+.terminal input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--code-text); outline: none; font: inherit; caret-color: var(--term-ein); }
+.terminal input::placeholder { color: var(--term-hint); opacity: 1; }
+.terminal .prompt { color: var(--term-prompt); }
+.auftrag { font-weight: 600; margin: 0 0 10px; }
+.checkliste { display: grid; gap: 10px; margin: 10px 0 16px; }
+.checkliste label { display: flex; gap: 12px; align-items: flex-start; }
+.vorlage { background: var(--falsch-bg); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+
+/* Abschluss */
+.abschluss { position: relative; background: var(--ok-bg); border: 1px solid var(--ok); border-radius: 16px; padding: 24px 28px 22px 108px; margin: 32px 0; --mk: var(--m-ok); }
+.abschluss[hidden] { display: none; }
+.abschluss::before { content: ""; position: absolute; left: 28px; top: 24px; width: 56px; height: 56px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 8px var(--ok-bg), 0 0 0 9px var(--ok); animation: puls .5s ease-out; }
+.abschluss::after { position: absolute; left: 44px; top: 40px; width: 24px; height: 24px; color: var(--ok-on); animation: puls .5s ease-out; }
+.abschluss h2 { margin: 2px 0 14px; font-size: 1.4em; line-height: 1.2; }
+.abschluss .pfadfertig { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--ok); }
+.abschluss .pfadfertig h3 { position: relative; display: flex; align-items: center; gap: 14px; min-height: 48px; margin: 0 0 8px; font-family: var(--serif); font-size: 1.15em; --mk: var(--m-star); }
+.pfadfertig h3::before { content: ""; flex: none; width: 48px; height: 48px; border-radius: 14px; background: var(--pfad, var(--akzent)); }
+.pfadfertig h3::after { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; color: var(--pfad-on); }
+.weiter { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--rand); }
+
+/* ---------- Startseite ---------- */
+.start { max-width: 1000px; }
+.hero { background: var(--flaeche); border: 1px solid var(--rand); border-radius: 24px; padding: clamp(24px, 5vw, 48px); box-shadow: var(--schatten); }
+.start h1 { font-size: clamp(2em, 4vw, 2.8em); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 14px; }
+.start .lead { font-size: 1.15em; color: var(--leise); max-width: 60ch; margin: 0 0 24px; }
+.hero p:last-child { margin-bottom: 0; }
+.karten { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin: 32px 0; }
+.karte { background: var(--flaeche); border: 1px solid var(--rand); border-top: 4px solid var(--pfad, var(--akzent)); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--schatten); transition: transform .2s ease, box-shadow .2s ease; }
+.karte:hover { transform: translateY(-2px); box-shadow: var(--schatten-hover); }
+.karte .kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.kachel { width: 48px; height: 48px; border-radius: 14px; background: var(--pfad, var(--akzent)); color: var(--pfad-on); display: grid; place-items: center; flex: none; }
+.kachel .ico { width: 26px; height: 26px; }
+.karte .prozent { font: 700 2em/1 var(--serif); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.karte h2 { margin: 6px 0 0; font-size: 1.25em; line-height: 1.2; letter-spacing: -.01em; }
+.karte p { margin: 0; color: var(--leise); font-size: .95em; flex: 1; }
+.karte .empfehlung { align-self: flex-start; font-size: .8em; font-weight: 700; line-height: 1.4; padding: 3px 11px; border-radius: 14px; color: var(--pfad); background: var(--flaeche); border: 1px solid var(--pfad); }
+.karte .kartenmeta { font-size: .85em; font-variant-numeric: tabular-nums; }
+.karte .balken { margin: 2px 0; }
+.karte .btn { margin-top: 6px; text-align: center; background: var(--pfad, var(--akzent)); color: var(--pfad-on); }
+.klein { font-size: .9em; color: var(--leise); font-variant-numeric: tabular-nums; }
+
+/* ---------- Abschlusstest ---------- */
+.ergebnis { border: 1px solid var(--ok); background: var(--ok-bg); border-radius: 16px; padding: 18px 24px; margin: 0 0 24px; }
+.ergebnis.nein { border-color: var(--warn-rand); background: var(--warn-bg); }
+.ergebnis h2 { margin: 0; font-size: 1.5em; line-height: 1.25; }
+.testliste { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; }
+.testliste li { display: grid; grid-template-columns: 28px 1fr; gap: 4px 12px; padding: 12px 14px; border: 1px solid var(--rand); border-radius: 12px; background: var(--flaeche); }
+.testliste li.nein { border-color: var(--falsch); }
+.testliste .mark { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--ok); color: var(--ok-on); }
+.testliste .nein .mark { background: var(--falsch); }
+.testliste .detail { grid-column: 2; font-size: .94em; }
+.testliste .detail p { margin: 6px 0 0; }
+.testliste ol { margin: 4px 0 0; padding-left: 1.4em; }
+
+/* ---------- Zertifikat: Blatt ist immer hell, A4 quer (297 x 210 mm) ---------- */
+.urkundeleiste { max-width: 760px; margin: 0 0 20px; }
+.urkundeleiste h1 { margin-bottom: 8px; }
+.urkundeleiste .zeile { flex-wrap: wrap; align-items: center; }
+.urkundeleiste .eingabe { width: 320px; max-width: 100%; }
+.blattbox { max-width: 297mm; margin: 0 auto; overflow: hidden; box-shadow: 0 8px 28px -10px rgba(0,0,0,.4); }
+.zert { --akzent: #a84a2a; --cowork: #3b6ea5; --code: #6b4fa0; --tinte: #1f1d1a; --zleise: #4a463f; width: 297mm; height: 210mm; background: #fff; color: var(--tinte); position: relative; padding: 11mm; transform-origin: 0 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: normal; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.zert * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.zert .rahmen { position: absolute; inset: 8mm; border: .9mm solid var(--tinte); }
+.zert .rahmen::before { content: ""; position: absolute; inset: 1.6mm; border: .3mm solid var(--pfad); }
+.zert .ecke { position: absolute; width: 20mm; height: 20mm; color: var(--pfad); }
+.zert .ecke.tl { left: 10.5mm; top: 10.5mm; } .zert .ecke.tr { right: 10.5mm; top: 10.5mm; transform: scaleX(-1); }
+.zert .ecke.bl { left: 10.5mm; bottom: 10.5mm; transform: scaleY(-1); } .zert .ecke.br { right: 10.5mm; bottom: 10.5mm; transform: scale(-1); }
+.zert .inhalt { position: relative; height: 100%; padding: 3mm 20mm 0; text-align: center; display: flex; flex-direction: column; }
+.zert .logo { display: block; height: 7mm; width: auto; margin: 0 auto 2.5mm; }
+.zert .eyebrow { font-size: 9pt; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: var(--akzent); margin: 0; }
+.zert h2.titel { font: 600 40pt/1.05 var(--serif); letter-spacing: .14em; text-transform: uppercase; margin: 3mm 0 0; }
+.zert .trenner { display: flex; align-items: center; justify-content: center; gap: 3mm; color: var(--pfad); margin: 2.5mm 0 3mm; }
+.zert .trenner::before, .zert .trenner::after { content: ""; width: 34mm; border-top: .3mm solid currentColor; }
+.zert .klein { font-size: 10.5pt; color: var(--zleise); margin: 0; }
+.zert .name { font: italic 600 31pt/1.2 var(--serif); margin: 2.5mm auto 0; min-width: 150mm; max-width: 210mm; min-height: 1.2em; padding: 0 6mm 1mm; border-bottom: .35mm solid var(--tinte); display: table; }
+.zert .satz { font-size: 11.5pt; line-height: 1.5; margin: 3mm 0 0; }
+.zert .fakten { display: flex; justify-content: center; margin: 5mm auto 0; border-top: .25mm solid #999; border-bottom: .25mm solid #999; padding: 2.5mm 0; width: 210mm; }
+.zert .fakten div { flex: 1; padding: 0 4mm; } .zert .fakten div + div { border-left: .25mm solid #bbb; }
+.zert dt { font-size: 7.5pt; letter-spacing: .16em; text-transform: uppercase; color: var(--zleise); font-weight: 700; }
+.zert dd { margin: .8mm 0 0; font: 600 15pt/1.2 var(--serif); }
+.zert dd small { font: 400 8.5pt system-ui, sans-serif; color: var(--zleise); }
+.zert .themen { margin: 4mm auto 0; width: 225mm; }
+.zert .themen h3 { font-size: 7.5pt; letter-spacing: .16em; text-transform: uppercase; color: var(--zleise); margin: 0 0 1.5mm; }
+.zert .themen ul { list-style: none; margin: 0; padding: 0; columns: 3; column-gap: 8mm; text-align: left; font-size: 9.5pt; line-height: 1.55; }
+.zert .themen.eng ul { font-size: 8.8pt; line-height: 1.45; }
+.zert .themen li { break-inside: avoid; padding-left: 5mm; position: relative; }
+.zert .themen li::before { content: ""; position: absolute; left: .4mm; top: 1.9mm; width: 2.2mm; height: 1.2mm; border-left: .4mm solid var(--pfad); border-bottom: .4mm solid var(--pfad); transform: rotate(-45deg); }
+.zert .unten { margin-top: auto; display: grid; grid-template-columns: 1fr 38mm 1fr; align-items: end; gap: 10mm; padding: 0 12mm; }
+.zert .sig { font-size: 9pt; color: var(--zleise); text-align: center; }
+.zert .sig .linie { height: 11mm; border-bottom: .35mm solid var(--tinte); margin-bottom: 1.2mm; font: 12pt var(--serif); color: var(--tinte); display: flex; align-items: flex-end; justify-content: center; }
+.zert .siegel { width: 36mm; height: 36mm; margin-bottom: -1mm; color: var(--pfad); }
+.zert .fuss { display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--zleise); letter-spacing: .04em; border-top: .25mm solid #bbb; margin: 4mm 4mm 0; padding: 1.8mm 0 5mm; }
+.zert .fuss b { font-weight: 700; color: var(--tinte); }
+
+/* ---------- Mobil ---------- */
+@media (max-width: 800px) {
+  #menueKnopf { display: inline-flex; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  header { gap: 6px; padding: 0 12px; }
+  header .btn, .mini { min-height: 44px; }
+  .mini { width: 44px; height: 44px; }
+  header .btn.zweit.klein { min-width: 44px; padding: 6px 12px; }
+  header .btn.zweit .lang { display: none; }
+  nav { --np: 12px; display: none; position: fixed; left: 0; right: 0; top: var(--header-h); bottom: 0; width: 100%; height: auto; z-index: 4; border-right: 0; padding: 16px 16px 40px; box-shadow: 0 24px 48px rgba(0,0,0,.28); }
+  nav.offen { display: block; }
+  nav .suche { font-size: 16px; min-height: 44px; }
+  main { padding: 24px 16px 56px; }
+  .beispiel, .paare { grid-template-columns: 1fr; }
+  .aufgabe { padding: 18px 16px 18px 18px; border-radius: 14px; }
+  .abschluss { padding: 96px 20px 20px; }
+  .abschluss::before { left: 20px; top: 20px; } .abschluss::after { left: 36px; top: 36px; }
+  .abschluss .btn { width: 100%; }
+  .weiter { flex-wrap: wrap; }
+  .weiter .btn { flex: 1 1 100%; min-height: 48px; }
+}
+@media (max-width: 520px) { .karten { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { header .logotext { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .karte:hover { transform: none; } }
+
+/* ---------- Druck: nur die Urkunde, A4 quer, immer hell ---------- */
+/* color-mix nur, wo unterstützt (Safari ≥ 16.2, Chrome ≥ 111); sonst gelten die Vollton-Fallbacks oben */
+@supports (background: color-mix(in srgb, red 50%, blue)) {
+  nav a.aktiv { background: color-mix(in srgb, var(--pfad, var(--akzent)) 10%, var(--flaeche)); }
+  .balken > div { background: linear-gradient(90deg, var(--pfad, var(--akzent)), color-mix(in srgb, var(--pfad, var(--akzent)) 62%, #fff)); }
+  .chip.pfad, .karte .empfehlung { background: color-mix(in srgb, var(--pfad) 10%, var(--flaeche)); border-color: color-mix(in srgb, var(--pfad) 35%, transparent); }
+  .aufgabe.fertig { background: color-mix(in srgb, var(--ok-bg) 55%, var(--flaeche)); }
+  .beispiel .schlecht { border-color: color-mix(in srgb, var(--falsch) 35%, transparent); }
+  .beispiel .gut { border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+  .hero { background: radial-gradient(120% 150% at 0% 0%, color-mix(in srgb, var(--akzent) 12%, transparent), transparent 62%), var(--flaeche); }
+}
+
+@page { size: A4 landscape; margin: 0; }
+@media print {
+  header, nav, .weiter, .extras, .nichtdrucken, .banner, .statusmeldung, .skip { display: none !important; }
+  html, body { background: #fff !important; margin: 0; }
+  .layout { display: block; min-height: 0; }
+  main { padding: 0; }
+  .blattbox { height: auto !important; max-width: none; overflow: visible; box-shadow: none; margin: 0; }
+  .zert { transform: none !important; margin: 0; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M7 10l3 2.5L7 15M12.5 15.5H17"/></symbol>
+<symbol id="i-quiz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8M12 16.8h.01"/></symbol>
+<symbol id="i-prompt" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/></symbol>
+<symbol id="i-praxis" viewBox="0 0 24 24"><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+<symbol id="i-zuordnen" viewBox="0 0 24 24"><path d="M4 8h12M13 4.5L16.5 8 13 11.5M20 16H8M11 12.5L7.5 16l3.5 3.5"/></symbol>
+<symbol id="i-reihe" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-luecke" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19.5h14"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-cowork" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></symbol>
+<symbol id="i-ecke" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width=".9"><path d="M2 2h22M2 2v22"/><path d="M6 6h14M6 6v14" opacity=".7"/><circle cx="6" cy="6" r="1.6" fill="currentColor" stroke="none"/><path d="M12 12a14 14 0 0 1 14 0M12 12a14 14 0 0 0 0 14"/></symbol>
+</svg>
+<a class="skip" href="#inhalt" id="skip">Zum Inhalt</a>
+<header>
+  <button class="btn zweit klein" id="menueKnopf" aria-expanded="false" aria-controls="nav"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg> Inhalt</button>
+  <a class="logo" href="#" aria-label="Claude-Lernpfad – Startseite"><span class="kachel" aria-hidden="true">✳</span><span class="logotext">Claude-Lernpfad</span></a>
+  <div class="platz"></div>
+  <details class="fmenue" id="fmenue">
+    <summary class="btn zweit klein" aria-label="Fortschritt"><svg class="ico" aria-hidden="true"><use href="#i-save"/></svg> <span class="lang">Fortschritt</span></summary>
+    <div class="fpanel">
+      <p>Dein Fortschritt wird automatisch in diesem Browser gespeichert. Wenn Browserdaten gelöscht werden oder du Rechner/Browser wechselst, nimm ihn per Sicherungsdatei mit.</p>
+      <button class="btn zweit klein" id="exportKnopf" title="Speichert deinen Fortschritt als Datei, z. B. in deinem OneDrive-Ordner."><svg class="ico" aria-hidden="true"><use href="#i-download"/></svg> Sicherungsdatei speichern</button>
+      <button class="btn zweit klein" id="importKnopf" title="Lädt eine zuvor gespeicherte Sicherungsdatei und übernimmt sie."><svg class="ico" aria-hidden="true"><use href="#i-upload"/></svg> Sicherungsdatei laden</button>
+      <input type="file" id="importDatei" accept=".json,application/json" hidden>
+      <button class="linkknopf gefahr" id="resetKnopf">Fortschritt zurücksetzen</button>
+    </div>
+  </details>
+  <button class="btn zweit klein" id="themaKnopf" aria-label="Dunkles Design" aria-pressed="false" title="Dunkles Design ein/aus"><svg class="ico mond" aria-hidden="true"><use href="#i-moon"/></svg><svg class="ico sonne" aria-hidden="true"><use href="#i-sun"/></svg></button>
+</header>
+<div class="banner" id="banner" role="alert" hidden>Dein Fortschritt kann in diesem Browser nicht gespeichert werden – sichere ihn regelmäßig als Datei.</div>
+<div class="statusmeldung" id="status" role="status"></div>
+<div class="layout">
+  <nav id="nav" aria-label="Lektionen">
+    <div class="suchfeld"><svg class="ico" aria-hidden="true"><use href="#i-search"/></svg><input type="search" class="suche" id="suche" aria-label="Lektionen suchen" placeholder="Lektion suchen …" autocomplete="off"></div>
+    <div id="navliste"></div>
+  </nav>
+  <main id="inhalt" tabindex="-1"></main>
+</div>
+
+<script src="pruefen.js"></script>
+<script>window.LERNPFAD = [];</script>
+<script src="inhalte/chat.js"></script>
+<script src="inhalte/cowork.js"></script>
+<script src="inhalte/code.js"></script>
+<script>
+(function () {
+  var KEY = 'claude-lernpfad-v1';
+  var TYPNAMEN = { quiz: 'Quiz', reihenfolge: 'Reihenfolge', zuordnen: 'Zuordnen', luecke: 'Eintippen',
+    terminal: 'Terminal-Übung', prompt: 'Prompt-Werkstatt', praxis: 'Praxis – in Claude ausprobieren' };
+  var ICONS = { quiz: 'quiz', reihenfolge: 'reihe', zuordnen: 'zuordnen', luecke: 'luecke', terminal: 'terminal', prompt: 'prompt', praxis: 'praxis', chat: 'prompt', cowork: 'cowork', code: 'code' };
+  function ico(n) { return '<svg class="ico" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
+  var ERFUNDEN = ' Nur erfundene Beispieldaten verwenden.';
+  var TYPINFO = { quiz: 'Wähle die richtige Antwort – manchmal sind mehrere richtig.', reihenfolge: 'Bring die Schritte mit den Pfeilen in die richtige Reihenfolge.',
+    zuordnen: 'Wähle für jeden Eintrag die passende Antwort.', luecke: 'Groß-/Kleinschreibung egal.', terminal: 'Simulation – auf deinem Rechner passiert nichts.',
+    prompt: 'Du bewertest dich selbst – nichts wird automatisch geprüft.' + ERFUNDEN, praxis: 'Öffne Claude in einem zweiten Fenster. Braucht Internet.' + ERFUNDEN };
+  var TRACKINFO = { chat: 'Start hier – für alle', cowork: 'Danach – wenn du die Desktop-App nutzt', code: 'Für die Technik – vorher Chat-Lektionen 1, 2 und 8' };
+  var tracks = window.LERNPFAD;
+  var alle = [], gueltig = new Set();
+  tracks.forEach(function (t) { t.lektionen.forEach(function (l) { l.track = t; alle.push(l); l.aufgaben.forEach(function (_, i) { gueltig.add(l.id + '.' + i); }); }); });
+
+  // ---------- Fortschritt (Format v2; v1-Dateien ohne tests/name werden aufgefüllt) ----------
+  var LOGO = 'data:image/png;base64,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';
+  var GRENZE = 80; // Bestehen ab Prozent
+  var UEBUNGEN_MIN = 90; // Abschlusstest und Zertifikat ab diesem Anteil erledigter Übungen (Prozent)
+  function erg(r) { return r && typeof r.prozent === 'number' && r.prozent >= 0 && r.prozent <= 100 && Number.isInteger(r.richtig) && Number.isInteger(r.gesamt) && r.richtig >= 0 && r.gesamt > 0 && r.richtig <= r.gesamt &&
+    typeof r.datum === 'string' && /^\d{4}-\d\d-\d\dT/.test(r.datum) && !isNaN(Date.parse(r.datum)); }
+  function kopie(r) { return { prozent: r.prozent, richtig: r.richtig, gesamt: r.gesamt, datum: r.datum }; }
+  function sauber(t) { // nur bekannte Lernpfade, geprüfte Zahlen/Daten
+    var o = {}; if (!t || typeof t !== 'object') return o;
+    tracks.forEach(function (k) { var e = t[k.id];
+      if (e && erg(e.bestes) && erg(e.letztes) && Number.isInteger(e.versuche) && e.versuche >= 1 && typeof e.bestanden === 'boolean') o[k.id] = { bestes: kopie(e.bestes), letztes: kopie(e.letztes), versuche: e.versuche, bestanden: e.bestanden }; });
+    return o;
+  }
+  function lesen() {
+    try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s.erledigt === 'object' && s.erledigt && !Array.isArray(s.erledigt)) {
+      s.app = 'claude-lernpfad'; s.v = 2; s.name = typeof s.name === 'string' ? s.name : ''; s.tests = sauber(s.tests); return s; } } catch (e) {}
+    return null;
+  }
+  var stand = lesen() || { app: 'claude-lernpfad', v: 2, erledigt: {}, name: '', tests: {} };
+  function schreiben() {
+    try { localStorage.setItem(KEY, JSON.stringify(stand)); } catch (e) {}
+    try { if (window.LERNPFAD_SYNC) window.LERNPFAD_SYNC.speichern(JSON.stringify(stand)); } catch (e) {} // z. B. SharePoint-Webpart
+  }
+  function mische(f) { // Vereinigung; Tests: bestes = höhere Prozent, versuche = Max, bestanden = OR, letztes = neueres; name: lokal vor fremd
+    Object.keys(f.erledigt).forEach(function (k) { if (f.erledigt[k] === true) stand.erledigt[k] = true; });
+    Object.keys(f.tests).forEach(function (id) { var a = stand.tests[id], b = f.tests[id];
+      if (!a) { stand.tests[id] = b; return; }
+      if (b.bestes.prozent > a.bestes.prozent) a.bestes = b.bestes;
+      if (b.letztes.datum > a.letztes.datum) a.letztes = b.letztes;
+      a.versuche = Math.max(a.versuche, b.versuche); a.bestanden = a.bestanden || b.bestanden; });
+    if (!stand.name) stand.name = f.name;
+  }
+  function speichern() { var f = lesen(); if (f) mische(f); schreiben(); } // erst fremden Stand (anderer Tab) einmischen
+  try { localStorage.setItem(KEY + '-probe', '1'); localStorage.removeItem(KEY + '-probe'); } catch (e) { document.getElementById('banner').hidden = false; }
+  function aid(l, i) { return l.id + '.' + i; }
+  function lektionStatus(l) {
+    var n = l.aufgaben.filter(function (_, i) { return stand.erledigt[aid(l, i)]; }).length;
+    return n === l.aufgaben.length ? 'fertig' : n ? 'begonnen' : 'offen';
+  }
+  function testDa(t) { return Array.isArray(t.abschlusstest) && t.abschlusstest.length > 0; }
+  function testStatus(t) { var e = stand.tests[t.id]; return e && e.bestanden ? 'bestanden' : uebungsQuote(t).frei ? 'frei' : 'gesperrt'; }
+  function uebungsQuote(t) { // erledigte Übungen des Lernpfads; abgerundet, damit 89,9 % nicht als 90 % zählt
+    var gesamt = 0, fertig = 0;
+    t.lektionen.forEach(function (l) { l.aufgaben.forEach(function (_, i) { gesamt++; if (stand.erledigt[aid(l, i)]) fertig++; }); });
+    var prozent = Math.floor(100 * fertig / gesamt);
+    return { fertig: fertig, gesamt: gesamt, prozent: prozent, frei: prozent >= UEBUNGEN_MIN };
+  }
+  function testText(t) { var s = testStatus(t); return s === 'bestanden' ? 'bestanden mit ' + stand.tests[t.id].bestes.prozent + ' %' : s === 'frei' ? 'freigeschaltet' : 'offen'; }
+  function trackQuote(t) {
+    var fertig = t.lektionen.filter(function (l) { return lektionStatus(l) === 'fertig'; }).length;
+    return { fertig: fertig, gesamt: t.lektionen.length, prozent: Math.round(100 * fertig / t.lektionen.length) };
+  }
+
+  // ---------- Helfer ----------
+  function el(tag, attrs) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      var v = attrs[k];
+      if (k === 'html') e.innerHTML = v;
+      else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+      else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      [].concat(arguments[i]).forEach(function (k) { if (k != null && k !== false) e.append(k); });
+    }
+    return e;
+  }
+  function mischen(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    if (a.length > 1 && a.every(function (x, i) { return x === arr[i]; })) a.push(a.shift()); // nie schon richtig
+    return a;
+  }
+  function plain(s) { return String(s).replace(/<[^>]+>/g, ''); }
+  function fast(n) { return n ? 'Fast! ' : 'Noch nicht ganz. '; }
+  function dauerText(m) { return m >= 60 ? Math.floor(m / 60) + ' Std.' + (m % 60 ? ' ' + m % 60 + ' Min.' : '') : m + ' Min.'; }
+  function balken(p, name) { return el('div', { class: 'balken', role: 'progressbar', 'aria-label': 'Fortschritt ' + name, 'aria-valuenow': p, 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuetext': p + ' Prozent' }, el('div', { style: 'width:' + p + '%' })); }
+  function enterPrueft(pruefe) { return function (e) { if (e.key === 'Enter' && e.target.matches('input, select')) { e.preventDefault(); pruefe(); } }; }
+  var status = document.getElementById('status');
+  function meldung(t, art) { status.className = 'statusmeldung ' + (art || ''); status.textContent = t; }
+
+  // ---------- Aufgaben-Renderer: liefern Knoten, rufen ok()/falsch() ----------
+  var RENDER = {
+    quiz: function (a, ok, falsch, T) { // T (Testmodus): kein Prüfen-Button, kein Feedback; T.antwort() liefert die Antwort oder null
+      var multi = a.richtig.length > 1, name = 'q' + Math.random().toString(36).slice(2);
+      var opts = mischen(a.optionen.map(function (_, i) { return i; })).map(function (i) { // value = Originalindex
+        return el('label', { class: 'option' }, el('input', { type: multi ? 'checkbox' : 'radio', name: name, value: i }), el('span', { html: a.optionen[i] }));
+      });
+      function antwort() { var g = []; opts.forEach(function (l) { if (l.firstChild.checked) g.push(+l.firstChild.value); }); return g; }
+      if (T) T.antwort = function () { var g = antwort(); return g.length ? g : null; };
+      function pruefe() {
+        opts.forEach(function (l) { l.classList.remove('falsch'); });
+        var g = antwort();
+        if (!g.length) return falsch('Bitte wähle zuerst eine Antwort aus.');
+        if (Pruefen.quiz(a, g)) return ok();
+        var r = g.filter(function (i) { return a.richtig.indexOf(i) >= 0; }).length;
+        opts.forEach(function (l) { if (l.firstChild.checked && a.richtig.indexOf(+l.firstChild.value) < 0) l.classList.add('falsch'); });
+        falsch(multi ? fast(r) + 'Du hast ' + r + ' von ' + a.richtig.length + ' richtigen Antworten' + (g.length > r ? ' – mindestens eine gewählte passt nicht (rot markiert).' : ' – es fehlen noch welche.')
+          : 'Noch nicht ganz – die rot markierte Antwort passt nicht. Versuch es nochmal.');
+      }
+      return [el('fieldset', { onkeydown: T ? null : enterPrueft(pruefe), onchange: function () { opts.forEach(function (l) { l.classList.remove('falsch'); }); } },
+        el('legend', { class: 'frage', html: a.frage }), multi && el('p', { class: 'hinweis' }, 'Mehrere Antworten sind richtig.'), el('div', { class: 'optionen' }, opts)),
+        !T && el('button', { class: 'btn', onclick: pruefe }, 'Prüfen')];
+    },
+    reihenfolge: function (a, ok, falsch, T) {
+      var reihe = mischen(a.schritte), liste = el('ol', { class: 'reihe' }), ansage = el('p', { class: 'sr', role: 'status' });
+      function tausch(i, j, richtung) {
+        var t = reihe[i]; reihe[i] = reihe[j]; reihe[j] = t; zeichnen();
+        var b = liste.children[j].querySelectorAll('button')[richtung];
+        (b.disabled ? liste.children[j].querySelector('button:not([disabled])') : b).focus();
+        ansage.textContent = plain(reihe[j]) + ' jetzt an Position ' + (j + 1) + ' von ' + reihe.length;
+      }
+      function zeichnen() {
+        liste.replaceChildren.apply(liste, reihe.map(function (s, i) {
+          return el('li', {}, el('span', { html: s }), el('span', { class: 'pfeile' },
+            el('button', { class: 'mini', 'aria-label': plain(s) + ' nach oben', disabled: i === 0, onclick: function () { tausch(i, i - 1, 0); } }, '↑'),
+            el('button', { class: 'mini', 'aria-label': plain(s) + ' nach unten', disabled: i === reihe.length - 1, onclick: function () { tausch(i, i + 1, 1); } }, '↓')));
+        }));
+      }
+      zeichnen();
+      if (T) T.antwort = function () { return reihe.slice(); };
+      return [el('p', { class: 'frage', html: a.frage }), el('p', { class: 'hinweis' }, 'Mit ↑ ↓ in die richtige Reihenfolge bringen.'), liste, ansage,
+        !T && el('button', { class: 'btn', onclick: function () {
+          if (Pruefen.reihenfolge(a, reihe)) return ok();
+          var n = 0; reihe.forEach(function (s, i) { if (s === a.schritte[i]) { n++; liste.children[i].classList.add('richtig'); } });
+          falsch(fast(n) + n + ' von ' + reihe.length + ' Schritten stehen richtig (grün markiert).');
+        } }, 'Prüfen')];
+    },
+    zuordnen: function (a, ok, falsch, T) {
+      // Pro Eintrag eine Auswahl als anklickbare Antwort-Chips (Radio-Gruppe) statt Dropdown
+      var rechts = mischen(a.paare.map(function (p) { return p[1]; })), uid = 'z' + Math.random().toString(36).slice(2);
+      var zeilen = a.paare.map(function (p, i) {
+        return el('fieldset', { class: 'paar' }, el('legend', { html: p[0] }),
+          el('div', { class: 'chips' }, rechts.map(function (r) {
+            return el('label', { class: 'chip' }, el('input', { type: 'radio', name: uid + i, value: r }), el('span', {}, r));
+          })));
+      });
+      function wert(f) { var c = f.querySelector('input:checked'); return c ? c.value : ''; }
+      if (T) T.antwort = function () { var w = zeilen.map(wert); return w.indexOf('') < 0 ? w : null; };
+      function pruefe() {
+        var wahl = zeilen.map(wert);
+        if (wahl.indexOf('') >= 0) return falsch('Bitte wähle zuerst für jeden Eintrag eine Antwort.');
+        var n = 0;
+        zeilen.forEach(function (f, i) { var r = wahl[i] === a.paare[i][1]; n += r; f.classList.toggle('richtig', r); f.classList.toggle('falsch', !r); });
+        Pruefen.zuordnen(a, wahl) ? ok() : falsch(fast(n) + n + ' von ' + a.paare.length + ' Zuordnungen stimmen (grün = richtig, rot = nochmal überlegen).');
+      }
+      var raster = el('div', { class: 'paare', onkeydown: T ? null : enterPrueft(pruefe),
+        onchange: function (e) { var f = e.target.closest('.paar'); if (f) f.classList.remove('richtig', 'falsch'); } }, zeilen);
+      return [el('p', { class: 'frage', html: a.frage }), raster, !T && el('button', { class: 'btn', onclick: pruefe }, 'Prüfen')];
+    },
+    luecke: function (a, ok, falsch, T) {
+      var ein = el('input', { class: 'eingabe', type: 'text', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Deine Antwort' });
+      function pruefe() { if (!ein.value.trim()) return falsch('Bitte zuerst etwas eintippen.'); Pruefen.luecke(a, ein.value) ? ok() : falsch(); }
+      if (T) T.antwort = function () { return ein.value.trim() ? ein.value : null; };
+      ein.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !T) pruefe(); });
+      return [el('p', { class: 'frage', html: a.frage }), el('div', { class: 'zeile' }, ein, !T && el('button', { class: 'btn', onclick: pruefe }, 'Prüfen'))];
+    },
+    terminal: function (a, ok, falsch) {
+      var schritt = 0, verlauf = el('div', { class: 'verlauf', 'aria-live': 'polite' });
+      var auftrag = el('p', { class: 'auftrag', 'aria-live': 'polite' });
+      var prompt = el('span', { class: 'prompt' });
+      var ein = el('input', { type: 'text', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Terminal-Eingabe', placeholder: 'Befehl eingeben, Enter drücken' });
+      if (a.start) verlauf.append(el('div', { class: 'aus' }, a.start));
+      function zeigeSchritt() {
+        var s = a.schritte[schritt];
+        if (!s) { auftrag.textContent = 'Geschafft – alle Schritte erledigt.'; ein.readOnly = true; ein.placeholder = ''; return; } // readOnly statt disabled: Fokus bleibt
+        auftrag.innerHTML = 'Schritt ' + (schritt + 1) + '/' + a.schritte.length + ': ' + s.auftrag;
+        prompt.textContent = (s.prompt || '$') + ' ';
+      }
+      ein.addEventListener('keydown', function (e) {
+        if (e.isComposing || e.key !== 'Enter' || ein.readOnly || !ein.value.trim()) return;
+        var s = a.schritte[schritt], wert = ein.value;
+        verlauf.append(el('div', { class: 'ein' }, (s.prompt || '$') + ' ' + wert));
+        ein.value = '';
+        if (Pruefen.terminal(s, wert)) {
+          verlauf.append(el('div', { class: 'aus' }, s.ausgabe || ''));
+          schritt++; zeigeSchritt();
+          if (schritt === a.schritte.length) ok(); else falsch.leeren();
+        } else {
+          verlauf.append(el('div', { class: 'fehler' }, s.fehler || 'Das war nicht der erwartete Befehl.'));
+          falsch(s.tipp ? 'Tipp: ' + s.tipp : null);
+        }
+        verlauf.scrollTop = verlauf.scrollHeight;
+      });
+      zeigeSchritt();
+      return [el('p', { class: 'frage', html: a.frage }), auftrag,
+        el('div', { class: 'terminal', onclick: function () { ein.focus(); } }, verlauf, el('div', { class: 'zeile' }, prompt, ein))];
+    },
+    prompt: function (a, ok, falsch) {
+      var text = el('textarea', { 'aria-label': 'Dein verbesserter Prompt', placeholder: 'Schreib hier deinen besseren Prompt …' });
+      var liste = checkliste(a, 'Prüf deinen Prompt selbst anhand der Checkliste:');
+      return [el('p', { class: 'frage', html: a.frage }), el('div', { class: 'vorlage' }, el('b', {}, 'Ausgangs-Prompt: '), el('span', { html: a.ausgangsprompt })),
+        text, liste.knoten,
+        el('button', { class: 'btn', onclick: function () {
+          if (text.value.trim().length < 20) return falsch('Schreib zuerst einen eigenen Prompt (mind. ein, zwei Sätze).');
+          Pruefen.checkliste(a, liste.haken(), text.value) ? ok() : falsch('Hake erst alle Punkte ab – oder überarbeite den Prompt, bis sie stimmen.');
+        } }, 'Fertig – Musterlösung zeigen')];
+    },
+    praxis: function (a, ok, falsch) {
+      var liste = checkliste(a, a.frage);
+      return [liste.knoten,
+        el('button', { class: 'btn', onclick: function () { Pruefen.checkliste(a, liste.haken()) ? ok() : falsch('Hake alle Punkte ab, sobald du sie erledigt hast.'); } }, 'Erledigt')];
+    }
+  };
+  function checkliste(a, legende) {
+    var boxen = a.checkliste.map(function () { return el('input', { type: 'checkbox' }); });
+    return { knoten: el('fieldset', {}, el('legend', { class: 'frage', html: legende }),
+        el('div', { class: 'checkliste' }, a.checkliste.map(function (c, i) { return el('label', {}, boxen[i], el('span', { html: c })); }))),
+      haken: function () { return boxen.map(function (b) { return b.checked; }); } };
+  }
+  function loesungHtml(a) {
+    switch (a.typ) {
+      case 'quiz': return a.richtig.map(function (i) { return '✓ ' + a.optionen[i]; }).join('<br>');
+      case 'reihenfolge': return '<ol>' + a.schritte.map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ol>';
+      case 'zuordnen': return a.paare.map(function (p) { return p[0] + ' → <b>' + p[1] + '</b>'; }).join('<br>');
+      case 'luecke': return '<code>' + a.antworten[0] + '</code>';
+      case 'terminal': return a.schritte.map(function (s) { return '<code>' + s.loesung + '</code>'; }).join('<br>');
+    }
+  }
+
+  function kopf(i, a) { return [el('h3', {}, el('span', { class: 'nr', 'aria-hidden': 'true' }, i + 1), el('span', { class: 'sr' }, 'Aufgabe ' + (i + 1)), el('span', { class: 'typ', html: ico(ICONS[a.typ]) + TYPNAMEN[a.typ] })), el('p', { class: 'typinfo' }, TYPINFO[a.typ])]; }
+  var seiteAktualisieren = function () {}; // wird von der Lektionsseite gesetzt (Zähler, Abschlussbox)
+  function aufgabeKarte(l, a, i) {
+    var id = aid(l, i);
+    var karte = el('section', { class: 'aufgabe' + (stand.erledigt[id] ? ' fertig' : '') });
+    var fb = el('div', { class: 'feedback', role: 'status' });
+    function zeigeOk(bereits) {
+      fb.className = 'feedback ok';
+      fb.innerHTML = '<b>' + (bereits ? 'Bereits erledigt.' : a.typ === 'praxis' ? 'Super, abgehakt!' : a.typ === 'prompt' ? 'Vergleiche mit der Musterlösung:' : 'Richtig!') + '</b> ' +
+        (a.typ === 'prompt' ? '<pre>' + a.muster + '</pre>' : '') + (a.erklaerung || '');
+      if (bereits) fb.append(el('p', {}, el('button', { class: 'btn zweit klein', onclick: function () { fb.className = 'feedback'; fb.innerHTML = ''; karte.classList.remove('fertig'); } }, 'Nochmal üben'))); // nur Anzeige, Fortschritt bleibt
+    }
+    function ok() {
+      stand.erledigt[id] = true; speichern(); karte.classList.add('fertig'); navZeichnen(); zeigeOk(); seiteAktualisieren();
+    }
+    function falsch(t) { fb.className = 'feedback falsch'; fb.innerHTML = t || a.falschHinweis || 'Noch nicht ganz – schau dir die Erklärung oben nochmal an und versuch es erneut.'; }
+    falsch.leeren = function () { fb.className = 'feedback'; fb.innerHTML = ''; };
+    karte.append.apply(karte, kopf(i, a));
+    karte.append.apply(karte, RENDER[a.typ](a, ok, falsch).filter(Boolean));
+    karte.append(fb);
+    if (stand.erledigt[id]) zeigeOk(true);
+    var extra = el('div', { class: 'extras' }), aufklapp = el('div', { class: 'aufklapp', 'aria-live': 'polite' });
+    if (a.tipp) extra.append(el('button', { class: 'btn zweit klein', html: ico('bulb') + 'Tipp', onclick: function () { aufklapp.innerHTML = ico('bulb') + ' ' + a.tipp; } }));
+    var loes = loesungHtml(a);
+    if (loes) extra.append(el('button', { class: 'btn zweit klein', onclick: function () { aufklapp.innerHTML = '<b>Lösung:</b><br>' + loes; } }, 'Lösung zeigen'));
+    if (extra.children.length) { extra.append(aufklapp); karte.append(extra); }
+    return karte;
+  }
+
+  // ---------- Seiten ----------
+  var nav = document.getElementById('nav'), navliste = document.getElementById('navliste'), suche = document.getElementById('suche'), main = document.getElementById('inhalt');
+  var aktuelleId = null, GLYPH = { fertig: '✓', begonnen: '◐', offen: '○' }, STATUSTEXT = { fertig: 'erledigt', begonnen: 'begonnen', offen: 'offen' };
+  function testNavEintrag(t) {
+    var s = testStatus(t), id = 'test-' + t.id;
+    return el('li', {}, el('a', { href: '#' + id, class: id === aktuelleId ? 'aktiv' : null, 'aria-current': id === aktuelleId ? 'page' : null },
+      el('span', { class: 'icon' + (s === 'bestanden' ? ' ok' : s === 'gesperrt' ? ' gesperrt' : ''), 'aria-hidden': 'true' }, s === 'bestanden' ? '✓' : s === 'gesperrt' ? '🔒' : '○'),
+      el('span', {}, 'Abschlusstest', el('span', { class: 'sr' }, ' – ' + (s === 'gesperrt' ? 'gesperrt' : testText(t))))));
+  }
+  function navZeichnen() {
+    var q = suche.value.trim().toLowerCase(), n = 0, teile = [];
+    tracks.forEach(function (t) {
+      var ls = t.lektionen.filter(function (l) { return !q || l.titel.toLowerCase().indexOf(q) >= 0 || plain(l.text).toLowerCase().indexOf(q) >= 0; });
+      if (!ls.length) return;
+      n += ls.length;
+      var tq = trackQuote(t);
+      teile.push(el('div', { class: 'gruppe', 'data-pfad': t.id }, el('h2', {}, t.titel + ' · ' + tq.fertig + '/' + tq.gesamt), balken(tq.prozent, t.titel),
+        el('ul', {}, ls.map(function (l) {
+          var s = lektionStatus(l);
+          return el('li', {}, el('a', { href: '#' + l.id, class: l.id === aktuelleId ? 'aktiv' : null, 'aria-current': l.id === aktuelleId ? 'page' : null },
+            el('span', { class: 'icon' + (s === 'fertig' ? ' ok' : s === 'begonnen' ? ' begonnen' : ''), 'aria-hidden': 'true' }, GLYPH[s]),
+            el('span', {}, l.titel, el('span', { class: 'sr' }, ' – ' + STATUSTEXT[s]))));
+        }), !q && testDa(t) && testNavEintrag(t))));
+    });
+    if (!n) teile.push(el('p', { class: 'klein' }, 'Keine Lektion gefunden.'));
+    navliste.replaceChildren.apply(navliste, teile);
+  }
+  function naechsteOffene(t) {
+    return t.lektionen.find(function (l) { return lektionStatus(l) !== 'fertig'; }) || t.lektionen[0];
+  }
+  function startseite() {
+    var z = alle.find(function (x) { return x.id === stand.zuletzt; });
+    main.replaceChildren(el('div', { class: 'start' }, el('div', { class: 'hero' },
+      el('h1', {}, 'Claude Schritt für Schritt lernen'),
+      el('p', { class: 'lead' }, 'Kurze Lektionen, echte Beispiele und Aufgaben zum Mitmachen – vom ersten Chat bis zu Claude Code im Terminal. Wähle einen Lernpfad:'),
+      z && el('p', {}, el('a', { class: 'btn gross fortsetzen', href: '#' + z.id }, 'Weiter mit: ' + z.titel + ' (' + z.track.titel + ')'))),
+      el('div', { class: 'karten' }, tracks.map(function (t) {
+        var q = trackQuote(t), weiter = naechsteOffene(t), min = t.lektionen.reduce(function (s, l) { return s + (l.dauer || 0); }, 0);
+        return el('div', { class: 'karte', 'data-pfad': t.id }, el('div', { class: 'kopf' }, el('span', { class: 'kachel', 'aria-hidden': 'true', html: ico(ICONS[t.id] || 'prompt') }), el('span', { class: 'prozent', 'aria-hidden': 'true' }, q.prozent + ' %')), el('h2', {}, t.titel), TRACKINFO[t.id] && el('strong', { class: 'empfehlung' }, TRACKINFO[t.id]), el('p', {}, t.beschreibung),
+          el('span', { class: 'klein kartenmeta' }, t.lektionen.length + ' Lektionen · ca. ' + dauerText(min)),
+          balken(q.prozent, t.titel), el('span', { class: 'klein' }, q.fertig + ' von ' + q.gesamt + ' Lektionen erledigt'),
+          testDa(t) && el('span', { class: 'klein' }, 'Abschlusstest: ', el('a', { href: '#test-' + t.id }, testText(t))),
+          testDa(t) && el('span', { class: 'klein' }, 'Übungen: ' + uebungsQuote(t).prozent + ' % (Test und Zertifikat ab ' + UEBUNGEN_MIN + ' %)'),
+          testStatus(t) === 'frei' ? el('a', { class: 'btn', href: '#test-' + t.id }, 'Zum Abschlusstest')
+            : el('a', { class: 'btn', href: '#' + weiter.id }, q.prozent === 100 ? 'Wiederholen' : (q.fertig ? 'Weiter: ' : 'Starten: ') + weiter.titel));
+      })),
+      el('div', { class: 'hinweisbox info', html:
+        'Der Lernpfad läuft komplett offline. Nur die Aufgaben „Praxis – in Claude ausprobieren“ brauchen Internet und deinen Claude-Zugang. ' +
+        'Dein Fortschritt wird automatisch in diesem Browser gespeichert (Details im Menü „Fortschritt“ oben).' }),
+      el('div', { class: 'hinweisbox wichtig', html: 'Gib in Übungen niemals echte Kunden-, Patienten- oder Personaldaten ein. Arbeite immer mit erfundenen Beispielen.' })));
+  }
+  function lektionsseite(l) {
+    var idx = alle.indexOf(l), vor = alle[idx - 1], nach = alle[idx + 1];
+    var zaehler = el('p', { class: 'zaehler' }), box = el('div', { class: 'abschluss', role: 'status' });
+    var teile = [el('h1', {}, l.titel), el('div', { class: 'meta' }, el('span', { class: 'chip pfad', 'data-pfad': l.track.id, html: ico(ICONS[l.track.id] || 'prompt') + plain(l.track.titel) }), l.dauer && el('span', { class: 'chip', html: ico('clock') + 'ca. ' + l.dauer + ' Min.' }), el('span', { class: 'chip' }, 'Stand ' + l.stand)), zaehler,
+      el('div', { class: 'text', html: l.text })];
+    if (l.beispiel) teile.push(el('div', { class: 'beispiel' },
+      el('div', { class: 'schlecht' }, el('b', {}, l.beispiel.schlechtTitel || 'So lieber nicht'), el('div', { html: l.beispiel.schlecht })),
+      el('div', { class: 'gut' }, el('b', {}, l.beispiel.gutTitel || 'So besser'), el('div', { html: l.beispiel.gut })),
+      l.beispiel.warum && el('div', { class: 'warum', html: l.beispiel.warum })));
+    l.aufgaben.forEach(function (a, i) { teile.push(aufgabeKarte(l, a, i)); });
+    teile.push(box, el('div', { class: 'weiter' },
+      vor ? el('a', { class: 'btn zweit', href: '#' + vor.id }, '← ' + vor.titel) : el('span'),
+      nach ? el('a', { class: 'btn', href: '#' + nach.id }, nach.titel + ' →') : el('a', { class: 'btn', href: '#' }, 'Zur Übersicht')));
+    seiteAktualisieren = function () {
+      var n = l.aufgaben.filter(function (_, i) { return stand.erledigt[aid(l, i)]; }).length;
+      zaehler.textContent = 'Aufgaben: ' + n + ' von ' + l.aufgaben.length + ' erledigt'; zaehler.style.setProperty('--p', 100 * n / l.aufgaben.length + '%');
+      box.replaceChildren(); box.hidden = n < l.aufgaben.length;
+      if (box.hidden) return;
+      box.append(el('h2', {}, 'Lektion geschafft'),
+        nach ? el('a', { class: 'btn', href: '#' + nach.id }, 'Weiter: ' + nach.titel + (nach.dauer ? ' · ca. ' + nach.dauer + ' Min.' : '')) : el('a', { class: 'btn', href: '#' }, 'Zur Übersicht'));
+      if (trackQuote(l.track).prozent === 100) { var tt = l.track, mitTest = testDa(tt);
+        box.append(el('div', { class: 'pfadfertig', 'data-pfad': tt.id }, el('h3', {}, 'Lernpfad ' + tt.titel + ' abgeschlossen'),
+          el('p', {}, mitTest ? 'Als Nächstes wartet der Abschlusstest. Ab ' + GRENZE + ' % bekommst du dein Zertifikat.' : 'Du kannst jetzt dein Zertifikat drucken.'),
+          el('a', { class: 'btn', href: '#' + (mitTest ? 'test-' : 'urkunde-') + tt.id }, mitTest ? 'Zum Abschlusstest' : 'Zum Zertifikat'),
+          el('p', { class: 'klein' }, 'Tipp: Sichere jetzt deinen Fortschritt als Datei, damit er nicht verloren geht. ', el('button', { class: 'linkknopf', onclick: exportieren }, 'Fortschritt als Datei sichern')))); }
+    };
+    seiteAktualisieren();
+    main.replaceChildren(el('div', { class: 'lektion' }, teile));
+  }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  function ergebnisText(e) { return e.richtig + ' von ' + e.gesamt + ' richtig – ' + e.prozent + ' %'; }
+  function testseite(t) {
+    var e = stand.tests[t.id], fragen = t.abschlusstest, h1 = el('h1', {}, 'Abschlusstest – ' + t.titel);
+    function huelle() { return el('div', { class: 'lektion', 'data-pfad': t.id }, [].concat.apply([], arguments)); }
+    var uq = uebungsQuote(t);
+    if (!uq.frei) return main.replaceChildren(huelle(h1,
+      el('p', {}, 'Der Abschlusstest wird freigeschaltet, sobald du mindestens ' + UEBUNGEN_MIN + ' % der Übungen dieses Lernpfads erledigt hast. Dein Stand: ' + uq.prozent + ' % (' + uq.fertig + ' von ' + uq.gesamt + ' Übungen). Noch offen:'),
+      el('ul', {}, t.lektionen.filter(function (l) { return lektionStatus(l) !== 'fertig'; }).map(function (l) { return el('li', {}, el('a', { href: '#' + l.id }, l.titel)); })),
+      el('p', {}, el('a', { class: 'btn', href: '#' + naechsteOffene(t).id }, 'Weiter lernen'))));
+    function startkarte() {
+      main.replaceChildren(huelle(h1, el('div', { class: 'text' }, el('ul', {}, [fragen.length + ' Fragen aus den Lektionen dieses Lernpfads', 'Bestehen ab ' + GRENZE + ' %', 'Kein Zeitlimit – nimm dir die Zeit, die du brauchst',
+          'Keine Tipps und keine Lösungen während des Tests – danach bekommst du eine Auswertung mit Erklärungen', 'Beliebig oft wiederholbar; Fragen und Antworten werden jedes Mal neu gemischt'].map(function (x) { return el('li', {}, x); }))),
+        e && el('p', {}, el('b', {}, 'Bisher bestes Ergebnis: '), ergebnisText(e.bestes) + (e.bestanden ? ' – bestanden' : '')),
+        el('div', { class: 'extras' }, el('button', { class: 'btn gross', onclick: start }, e ? 'Test erneut starten' : 'Test starten'), e && e.bestanden && el('a', { class: 'btn zweit gross', href: '#urkunde-' + t.id }, 'Zum Zertifikat'))));
+    }
+    function start() { // alle Fragen einmal aufbauen und nur ein-/ausblenden: Eingaben bleiben beim Zurückgehen erhalten
+      var i = 0, items = mischen(fragen).map(function (a, k) {
+        var T = {}, karte = el('section', { class: 'aufgabe' }, kopf(k, a), RENDER[a.typ](a, function () {}, function () {}, T).filter(Boolean));
+        return { a: a, T: T, karte: karte };
+      });
+      var zaehler = el('p', { class: 'zaehler', tabindex: '-1' }), hinweis = el('p', { role: 'status' });
+      var zurueck = el('button', { class: 'btn zweit', onclick: function () { zeige(i - 1); } }, '← Zurück'), weiter = el('button', { class: 'btn', onclick: vor });
+      function zeige(n) {
+        i = n; items.forEach(function (it, k) { it.karte.hidden = k !== i; });
+        zaehler.textContent = 'Frage ' + (i + 1) + ' von ' + items.length; zaehler.style.setProperty('--p', 100 * (i + 1) / items.length + '%');
+        zurueck.disabled = i === 0; weiter.textContent = i === items.length - 1 ? 'Test abgeben' : 'Weiter →';
+        hinweis.className = ''; hinweis.textContent = '';
+      }
+      function vor() {
+        if (items[i].T.antwort() == null) { hinweis.className = 'feedback falsch'; hinweis.textContent = 'Bitte gib zuerst eine Antwort ein, dann geht es weiter.'; return; }
+        if (i < items.length - 1) { zeige(i + 1); window.scrollTo(0, 0); zaehler.focus(); } else ergebnis(items);
+      }
+      main.replaceChildren(huelle(h1, zaehler, items.map(function (it) { return it.karte; }), hinweis, el('div', { class: 'weiter' }, zurueck, weiter)));
+      zeige(0); zaehler.focus();
+    }
+    function ergebnis(items) {
+      var richtig = 0, liste = items.map(function (it, k) {
+        var ok = Pruefen[it.a.typ](it.a, it.T.antwort()), l = alle.find(function (x) { return x.id === it.a.thema; });
+        richtig += ok;
+        return el('li', { class: ok ? 'ja' : 'nein' }, el('span', { class: 'mark', 'aria-hidden': 'true' }, ok ? '✓' : '✕'),
+          el('div', {}, el('span', { class: 'sr' }, (ok ? 'Richtig' : 'Falsch') + ': Frage ' + (k + 1) + '. '), el('span', { html: it.a.frage })),
+          !ok && el('div', { class: 'detail' }, el('b', {}, 'Richtige Lösung:'), el('div', { html: loesungHtml(it.a) }), el('p', { html: it.a.erklaerung || '' }), l && el('p', {}, el('a', { href: '#' + l.id }, 'Zur Lektion: ' + l.titel))));
+      });
+      var bestanden = richtig * 100 >= GRENZE * items.length, rec = { prozent: Math.round(100 * richtig / items.length), richtig: richtig, gesamt: items.length, datum: new Date().toISOString() };
+      var z = stand.tests[t.id] || (stand.tests[t.id] = { bestes: rec, letztes: rec, versuche: 0, bestanden: false });
+      z.versuche++; z.letztes = rec; if (rec.prozent > z.bestes.prozent) z.bestes = rec; z.bestanden = z.bestanden || bestanden;
+      speichern(); navZeichnen(); e = stand.tests[t.id];
+      main.replaceChildren(huelle(h1, el('div', { class: 'ergebnis' + (bestanden ? '' : ' nein'), role: 'status' },
+        el('h2', {}, ergebnisText(rec) + ' – ' + (bestanden ? 'Bestanden' : 'Leider nicht bestanden – ' + GRENZE + ' % nötig'))),
+        el('ol', { class: 'testliste' }, liste),
+        el('div', { class: 'extras' }, bestanden && el('a', { class: 'btn', href: '#urkunde-' + t.id }, 'Zum Zertifikat'), el('button', { class: 'btn' + (bestanden ? ' zweit' : ''), onclick: start }, 'Test wiederholen'), el('a', { class: 'btn zweit', href: '#' }, 'Zur Übersicht'))));
+      window.scrollTo(0, 0); h1.focus();
+    }
+    startkarte();
+  }
+  function urkunde(t) {
+    var f = lesen(); if (f) mische(f); // gespeicherten Stand (auch aus anderem Tab) frisch prüfen
+    var uq = uebungsQuote(t), e = stand.tests[t.id], offen = !uq.frei;
+    if (offen || (testDa(t) && !(e && e.bestanden))) return main.replaceChildren(el('h1', {}, 'Zertifikat'),
+      el('p', {}, 'Das Zertifikat für „' + t.titel + '“ gibt es, sobald du mindestens ' + UEBUNGEN_MIN + ' % der Übungen erledigt' + (testDa(t) ? ' und den Abschlusstest bestanden' : '') + ' hast.'),
+      el('p', {}, 'Dein Stand: ' + uq.prozent + ' % der Übungen (' + uq.fertig + ' von ' + uq.gesamt + ')' + (testDa(t) ? ' · Abschlusstest: ' + testText(t) : '') + '.'),
+      el('p', {}, el('a', { class: 'btn', href: '#' + (offen ? naechsteOffene(t).id : 'test-' + t.id) }, offen ? 'Weiter lernen' : 'Zum Abschlusstest'), ' ', el('a', { href: '#' }, 'Zur Übersicht')));
+    var themen = t.lektionen.filter(function (l) { return l.titel !== 'Abschlussprojekt'; }).map(function (l) { return l.titel; });
+    var st = t.lektionen.map(function (l) { return l.stand; }).sort().pop().replace(/^(\d{4})-(\d\d)$/, '$2/$1');
+    var blatt = el('section', { class: 'zert', 'data-pfad': t.id, 'aria-label': 'Zertifikat', html:
+      '<div class="rahmen"></div>' + ['tl', 'tr', 'bl', 'br'].map(function (c) { return '<svg class="ecke ' + c + '" aria-hidden="true"><use href="#i-ecke"/></svg>'; }).join('') +
+      '<div class="inhalt"><img class="logo" src="' + LOGO + '" alt="cursorsystems"><p class="eyebrow">Claude-Lernpfad</p><h2 class="titel">Zertifikat</h2>' +
+      '<div class="trenner"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="currentColor"/></svg></div>' +
+      '<p class="klein">Hiermit wird bestätigt, dass</p><div class="name"></div>' +
+      '<p class="satz">den Lernpfad <b>„' + esc(t.titel) + '“</b> durchgearbeitet' + (e ? '<br>und den Abschlusstest erfolgreich bestanden hat.' : ' hat.') + '</p>' +
+      '<dl class="fakten"><div><dt>Lernpfad</dt><dd>' + esc(t.titel) + '</dd></div><div><dt>Übungen</dt><dd>' + uq.fertig + ' von ' + uq.gesamt + ' <small>(' + uq.prozent + ' %)</small></dd></div>' +
+      (e ? '<div><dt>Abschlusstest</dt><dd>' + e.bestes.prozent + ' % <small>(Bestehen ab ' + GRENZE + ' %)</small></dd></div>' : '') + '</dl>' +
+      '<section class="themen' + (themen.length > 9 ? ' eng' : '') + '" aria-label="Themen"><h3>Behandelte Themen</h3><ul>' + themen.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></section>' +
+      '<div class="unten"><div class="sig"><div class="linie">' + (e ? new Date(e.bestes.datum).toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')) + '</div>Datum</div>' +
+      '<svg class="siegel" viewBox="-50 -50 100 100" aria-label="Siegel: bestanden" role="img"><defs><path id="kr" d="M-31 0a31 31 0 1 1 62 0a31 31 0 1 1-62 0"/></defs><g fill="none" stroke="currentColor">' +
+      '<path stroke-width="1.2" stroke-linejoin="round" d="M0.0 -47.0L4.9 -43.2L10.5 -45.8L14.4 -41.1L20.4 -42.3L23.1 -36.8L29.3 -36.7L30.8 -30.8L36.7 -29.3L36.8 -23.1L42.3 -20.4L41.1 -14.4L45.8 -10.5L43.2 -4.9L47.0 -0.0L43.2 4.9L45.8 10.5L41.1 14.4L42.3 20.4L36.8 23.1L36.7 29.3L30.8 30.8L29.3 36.7L23.1 36.8L20.4 42.3L14.4 41.1L10.5 45.8L4.9 43.2L0.0 47.0L-4.9 43.2L-10.5 45.8L-14.4 41.1L-20.4 42.3L-23.1 36.8L-29.3 36.7L-30.8 30.8L-36.7 29.3L-36.8 23.1L-42.3 20.4L-41.1 14.4L-45.8 10.5L-43.2 4.9L-47.0 0.0L-43.2 -4.9L-45.8 -10.5L-41.1 -14.4L-42.3 -20.4L-36.8 -23.1L-36.7 -29.3L-30.8 -30.8L-29.3 -36.7L-23.1 -36.8L-20.4 -42.3L-14.4 -41.1L-10.5 -45.8L-4.9 -43.2Z"/>' +
+      '<circle r="40" stroke-width=".6"/><circle r="25" stroke-width=".6"/><path d="M-9 1l6.500 6.500 12-14" stroke-width="3.600" stroke-linecap="round" stroke-linejoin="round"/></g>' +
+      '<text font-family="Georgia,serif" font-size="5.6" font-weight="700" letter-spacing="1.6" fill="currentColor"><textPath href="#kr" startOffset="50%" text-anchor="middle">BESTANDEN · ' + esc(t.titel.toUpperCase()) + ' · </textPath></text></svg>' +
+      '<div class="sig"><div class="linie"></div>Unterschrift Geschäftsführung</div></div>' +
+      '<div class="fuss"><span><b>Interne Teilnahmebestätigung</b> – kein staatlicher oder extern anerkannter Abschluss</span><span>Selbstständig durchgeführt, ohne Aufsicht</span><span>Stand der Inhalte: <b>' + esc(st) + '</b></span></div></div>' });
+    var name = blatt.querySelector('.name'), box = el('div', { class: 'blattbox' }, blatt);
+    var hinweis = el('span', { class: 'klein' }, 'Bitte Namen eintragen.');
+    var druck = el('button', { class: 'btn', onclick: function () { window.print(); } }, 'Drucken / als PDF speichern');
+    var ein = el('input', { class: 'eingabe', id: 'urkundeName', type: 'text', maxlength: '60', autocomplete: 'name', value: stand.name, oninput: sync });
+    function sync() {
+      var v = ein.value.trim(); name.textContent = v; druck.disabled = !v; hinweis.hidden = !!v;
+      if (v === stand.name) return;
+      stand.name = v; speichern(); if (!v) { stand.name = ''; schreiben(); } // geleert: nicht aus fremdem Stand zurückholen
+    }
+    function fit() { var s = Math.min(1, box.clientWidth / blatt.offsetWidth); blatt.style.transform = 'scale(' + s + ')'; box.style.height = blatt.offsetHeight * s + 'px'; }
+    main.replaceChildren(el('div', { class: 'urkundeleiste nichtdrucken' }, el('h1', {}, 'Dein Zertifikat – ' + t.titel),
+      el('p', {}, 'Trage deinen Namen ein und drucke das Zertifikat oder speichere es als PDF.'),
+      el('div', { class: 'zeile' }, el('label', { for: 'urkundeName' }, 'Dein Name'), ein, druck, el('a', { href: '#' }, 'Zur Übersicht')), el('p', { role: 'status' }, hinweis),
+      el('p', { class: 'klein' }, 'Tipp: Sichere deinen Fortschritt als Datei, damit Zertifikat und Testergebnis nicht verloren gehen. ', el('button', { class: 'linkknopf', onclick: exportieren }, 'Sicherungsdatei speichern'))), box);
+    sync(); fit(); window.onresize = fit;
+  }
+  function route() {
+    var id = location.hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (e) {}
+    var l = alle.find(function (x) { return x.id === id; });
+    var u = tracks.find(function (t) { return 'urkunde-' + t.id === id; }), tt = tracks.find(function (t) { return 'test-' + t.id === id && testDa(t); });
+    aktuelleId = l ? l.id : tt ? id : u && testDa(u) ? 'test-' + u.id : null;
+    seiteAktualisieren = function () {}; window.onresize = null; fm.open = false;
+    if (l) { stand.zuletzt = l.id; speichern(); lektionsseite(l); } else if (tt) testseite(tt); else if (u) urkunde(u); else startseite();
+    document.title = (l ? l.titel + ' – ' : tt ? 'Abschlusstest – ' : u ? 'Zertifikat – ' : '') + 'Claude-Lernpfad';
+    navZeichnen(); schliesseNav(); meldung('');
+    window.scrollTo(0, 0);
+    var h1 = main.querySelector('h1'); h1.tabIndex = -1; h1.focus({ preventScroll: true });
+  }
+  // Nach Import: nichts neu aufbauen (Eingaben und Scrollposition bleiben)
+  function aktualisieren() {
+    navZeichnen();
+    var l = alle.find(function (x) { return x.id === aktuelleId; });
+    if (l) {
+      [].forEach.call(main.querySelectorAll('.aufgabe'), function (k, i) { if (stand.erledigt[aid(l, i)]) k.classList.add('fertig'); });
+      seiteAktualisieren();
+    } else if (!location.hash.slice(1)) startseite(); else if (/^urkunde-/.test(location.hash.slice(1))) route();
+  }
+
+  // ---------- Kopfzeile ----------
+  var menue = document.getElementById('menueKnopf'), fm = document.getElementById('fmenue');
+  function schliesseNav() { nav.classList.remove('offen'); menue.setAttribute('aria-expanded', 'false'); }
+  menue.onclick = function () { nav.style.top = document.querySelector('header').offsetHeight + 'px'; var o = nav.classList.toggle('offen'); menue.setAttribute('aria-expanded', o); };
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) schliesseNav(); });
+  suche.addEventListener('input', navZeichnen);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (fm.open) { fm.open = false; fm.querySelector('summary').focus(); }
+    else if (e.target === suche && suche.value) { suche.value = ''; navZeichnen(); }
+    else if (nav.classList.contains('offen')) { schliesseNav(); menue.focus(); }
+  });
+  document.addEventListener('click', function (e) { if (fm.open && !fm.contains(e.target)) fm.open = false; });
+  fm.addEventListener('focusout', function (e) { if (e.relatedTarget && !fm.contains(e.relatedTarget)) fm.open = false; });
+  document.getElementById('resetKnopf').onclick = function () {
+    fm.open = false;
+    if (!confirm('Wirklich den gesamten Fortschritt in diesem Browser löschen (auch Testergebnisse und Name)? Das lässt sich nicht rückgängig machen. Tipp: Sichere ihn vorher als Sicherungsdatei.')) return;
+    stand.erledigt = {}; stand.tests = {}; stand.name = ''; delete stand.zuletzt; schreiben(); route();
+  };
+  document.getElementById('skip').addEventListener('click', function (e) { e.preventDefault(); main.focus(); }); // kein Hash-Wechsel
+  var wurzel = document.documentElement, themaKnopf = document.getElementById('themaKnopf');
+  function istDunkel() { return wurzel.dataset.theme ? wurzel.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  themaKnopf.setAttribute('aria-pressed', istDunkel());
+  themaKnopf.onclick = function () {
+    wurzel.dataset.theme = istDunkel() ? 'light' : 'dark';
+    themaKnopf.setAttribute('aria-pressed', istDunkel());
+    try { localStorage.setItem(KEY + '-thema', wurzel.dataset.theme); } catch (e) {}
+  };
+  function exportieren() {
+    var a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(stand, null, 1)], { type: 'application/json' })), download: 'claude-lernpfad-fortschritt.json' });
+    document.body.append(a); a.click(); a.remove();
+  }
+  document.getElementById('exportKnopf').onclick = exportieren;
+  var datei = document.getElementById('importDatei');
+  document.getElementById('importKnopf').onclick = function () { datei.click(); };
+  datei.onchange = function () {
+    var f = datei.files[0]; if (!f) return;
+    f.text().then(function (t) {
+      var r = uebernehmen(JSON.parse(t));
+      meldung(r.n + (r.n === 1 ? ' Aufgabe' : ' Aufgaben') + ' übernommen' + (r.nt ? ' und ' + r.nt + (r.nt === 1 ? ' Testergebnis' : ' Testergebnisse') : ''), 'ok');
+    }).catch(function () { meldung('Die Datei konnte nicht gelesen werden – ist es eine gesicherte Lernpfad-Datei?', 'falsch'); });
+    datei.value = '';
+  };
+  function uebernehmen(j) { // fremden Stand (Datei oder Webpart-Speicher) geprüft einmischen
+    var e = j && j.erledigt, n = 0;
+    if (!e || typeof e !== 'object' || Array.isArray(e) || Object.keys(e).some(function (k) { return e[k] !== true; })) throw new Error();
+    var neu = { erledigt: {}, tests: sauber(j.tests), name: typeof j.name === 'string' ? j.name.trim().slice(0, 60) : '' };
+    Object.keys(e).forEach(function (k) { if (gueltig.has(k)) { neu.erledigt[k] = true; n++; } }); // zusammenführen, nur bekannte Aufgaben
+    mische(neu); speichern(); aktualisieren();
+    return { n: n, nt: Object.keys(neu.tests).length };
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+  if (window.LERNPFAD_SYNC) window.LERNPFAD_SYNC.laden().then(function (t) { if (t) uebernehmen(JSON.parse(t)); else schreiben(); }).catch(function () {});
+})();
+</script>
+</body>
+</html>
